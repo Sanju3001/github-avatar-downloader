@@ -11,24 +11,43 @@ console.log('Welcome to the GitHub Avatar Downloader!');
 
 function getRepoContributors(repoOwner, repoName, cb) {
 
-  var requestURL = 'https://' + GITHUB_USER + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
+  var options = {
+  url: 'https://' + GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
+  headers: {'User-Agent': 'request'}
 
-  console.log(requestURL);
+  };
 
-/*
-request.get(url)
-       .on('error', function (err) {
+  //console.log(options.url);
+
+  //var newURL = options.requestURL + options.headers.UserAgent;
+
+request(options, function (error, response, body) {
+  if (!error && response.statusCode == 200) {
+    var info = JSON.parse(body);
+    cb(info);
+  }
+})
+
+
+
+       /*.on('error', function (err) {
          throw err;
        })
        .on('response', function (response) {
-         console.log('Response Status Code: ', response.statusCode, ' Response Message: ', response.statusMessage, ' Content type: ', response.headers['content-type']);
-       })
-       .pipe(fs.createWriteStream('./downloaded.html'));
-*/
+         output(response);
+       });
+       //.pipe(fs.createWriteStream('./downloaded.html'));
+        */
 
 }
 
-getRepoContributors("gibson042", "jquery", function(err, result) {
-  console.log("Errors:", err);
-  console.log("Result:", result);
+getRepoContributors("gibson042", "jquery", function(body) {
+  body.forEach(function(user){
+    console.log(user.avatar_url);
+  })
 });
+
+/*function output(data) {
+    console.log(data);
+}
+*/
