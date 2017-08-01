@@ -41,13 +41,28 @@ request(options, function (error, response, body) {
 
 }
 
+
+
+function downloadImageByURL (url, filePath) {
+
+ /* fs.readFile(url,function(err, data) {
+     fs.writeFile(filePath, url);
+});
+*/
+
+  request.get(url).pipe(fs.createWriteStream(filePath));
+
+}
+
+/*
+downloadImageByURL("https://avatars2.githubusercontent.com/u/2741?v=3&s=466", "./downloads/1.jpg");
+*/
+
 getRepoContributors("gibson042", "jquery", function(body) {
   body.forEach(function(user){
-    console.log(user.avatar_url);
+    login = "./downloads/" + user.login + ".jpg";
+    downloadImageByURL(user.avatar_url, login);
   })
 });
 
-/*function output(data) {
-    console.log(data);
-}
-*/
+
